@@ -8,6 +8,6 @@ export class DIDOperations {
 
     let response = await essentialsBridge.postMessage<any>("elastos_getCredentials", query);
     console.log("getCredentials Response received", response);
-    return VerifiablePresentation.parseContent(JSON.stringify(response));
+    return VerifiablePresentation.parse(JSON.stringify(response));
   }
 }

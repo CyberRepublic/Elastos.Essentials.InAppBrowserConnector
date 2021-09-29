@@ -11,21 +11,21 @@ export default {
 	output: [
 		{
 			sourcemap: true,
-			format: 'umd',
+			format: 'iife',
 			file: 'dist/essentialsiabconnector.js'
 		},
 	],
 	external: [
-	  /* "@elastosfoundation/did-js-sdk",
+		/* "@elastosfoundation/did-js-sdk",
 		"moment",
 		"rxjs" */
 	],
 	plugins: [
 		alias({
 			"entries": [
-					{ "find": "buffer", "replacement": "node_modules/buffer/index.js" },
-					{ "find": "stream", "replacement": "node_modules/stream/index.js" },
-					{ "find": "events", "replacement": "node_modules/events/events.js" }
+				{ "find": "buffer", "replacement": "node_modules/buffer/index.js" },
+				{ "find": "stream", "replacement": "node_modules/stream/index.js" },
+				{ "find": "events", "replacement": "node_modules/events/events.js" }
 			]
 		}),
 		resolve({

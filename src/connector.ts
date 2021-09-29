@@ -1,8 +1,8 @@
-import { VerifiableCredential, VerifiablePresentation } from "@elastosfoundation/did-js-sdk/typings";
-import { Interfaces, DID, Wallet } from "@elastosfoundation/elastos-connectivity-sdk-js";
+import { VerifiableCredential, VerifiablePresentation } from "@elastosfoundation/did-js-sdk";
+import { DID, Interfaces } from "@elastosfoundation/elastos-connectivity-sdk-js";
+import { GetCredentialsQuery } from "@elastosfoundation/elastos-connectivity-sdk-js/typings/did";
 import { TransactionResult } from "@elastosfoundation/elastos-connectivity-sdk-js/typings/wallet";
 import { DIDOperations } from "./did/did";
-import { GetCredentialsQuery } from "@elastosfoundation/elastos-connectivity-sdk-js/typings/did";
 import { essentialsBridge } from "./essentialsbridge";
 
 /**
@@ -29,6 +29,14 @@ class EssentialsIABConnector implements Interfaces.Connectors.IConnector {
   }
 
   signData(data: string, jwtExtra?: any, signatureFieldName?: string): Promise<DID.SignedData> {
+    throw new Error("Method not implemented.");
+  }
+
+  deleteCredentials(credentialIds: string[], options?: DID.DeleteCredentialOptions): Promise<string[]> {
+    throw new Error("Method not implemented.");
+  }
+
+  requestPublish(): Promise<string> {
     throw new Error("Method not implemented.");
   }
 
