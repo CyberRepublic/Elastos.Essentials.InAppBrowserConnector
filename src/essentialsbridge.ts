@@ -19,14 +19,14 @@ class EssentialsBridge {
     console.log("EssentialsBridge: postMessage", handler, id, data);
 
     return new Promise<T>((resolve, reject) => {
-      this.callbacks.set(id, {resolve, reject});
+      this.callbacks.set(id, { resolve, reject });
 
       let object = {
         id: id,
         name: handler,
         object: data,
       };
-      (window as any).webkit.messageHandlers.cordova_iab.postMessage(JSON.stringify(object));
+      (window as any).webkit.messageHandlers.essentialsExtractor.postMessage(JSON.stringify(object));
     });
   }
 
