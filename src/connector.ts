@@ -10,7 +10,7 @@ import { essentialsBridge } from "./essentialsbridge";
  * Essentials dApp browser. This connector is normally injected as a global window.elastos and can then
  * be found by the connectivity SDK as one of the available connectors for elastos operations.
  */
-class EssentialsIABConnector implements Interfaces.Connectors.IConnector {
+class EssentialsDABConnector implements Interfaces.Connectors.IConnector {
   public name: string = "essentialsiab";
 
   async getDisplayName(): Promise<string> {
@@ -74,4 +74,4 @@ class EssentialsIABConnector implements Interfaces.Connectors.IConnector {
 }
 
 // Expose this class globally to be able to create instances from the browser dApp.
-window["EssentialsIABConnector"] = EssentialsIABConnector;
+window["EssentialsDABConnector"] = EssentialsDABConnector;
