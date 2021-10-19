@@ -1,4 +1,4 @@
-import { VerifiableCredential, VerifiablePresentation } from "@elastosfoundation/did-js-sdk";
+import { JSONObject, VerifiableCredential, VerifiablePresentation } from "@elastosfoundation/did-js-sdk";
 import { DID, Interfaces } from "@elastosfoundation/elastos-connectivity-sdk-js";
 import { GetCredentialsQuery } from "@elastosfoundation/elastos-connectivity-sdk-js/typings/did";
 import { TransactionResult } from "@elastosfoundation/elastos-connectivity-sdk-js/typings/wallet";
@@ -22,6 +22,10 @@ class EssentialsDABConnector implements Interfaces.Connectors.IConnector {
    */
   async getCredentials(query: GetCredentialsQuery): Promise<VerifiablePresentation> {
     return DIDOperations.getCredentials(query);
+  }
+
+  issueCredential(holder: string, types: string[], subject: JSONObject, identifier?: string, expirationDate?: string): Promise<VerifiableCredential> {
+    throw new Error("Method not implemented.");
   }
 
   importCredentials(credentials: VerifiableCredential[], options?: DID.ImportCredentialOptions): Promise<DID.ImportedCredential[]> {
