@@ -33,7 +33,7 @@ class EssentialsDABConnector implements Interfaces.Connectors.IConnector {
   }
 
   signData(data: string, jwtExtra?: any, signatureFieldName?: string): Promise<DID.SignedData> {
-    throw new Error("Method not implemented.");
+    return DIDOperations.signData(data, jwtExtra, signatureFieldName);
   }
 
   deleteCredentials(credentialIds: string[], options?: DID.DeleteCredentialOptions): Promise<string[]> {
