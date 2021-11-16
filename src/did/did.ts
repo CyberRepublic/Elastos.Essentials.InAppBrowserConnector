@@ -1,15 +1,25 @@
-import { VerifiablePresentation } from "@elastosfoundation/did-js-sdk";
-import { DID } from "@elastosfoundation/elastos-connectivity-sdk-js/typings";
-import { GetCredentialsQuery } from "@elastosfoundation/elastos-connectivity-sdk-js/typings/did";
+import { VerifiableCredential, VerifiablePresentation } from "@elastosfoundation/did-js-sdk";
+import { DID } from "@elastosfoundation/elastos-connectivity-sdk-js";
 import { essentialsBridge } from "../essentialsbridge";
 
 export class DIDOperations {
-  public static async getCredentials(query: GetCredentialsQuery): Promise<VerifiablePresentation> {
+  public static async getCredentials(query: DID.GetCredentialsQuery): Promise<VerifiablePresentation> {
     console.log("getCredentials request received", query);
 
     let response = await essentialsBridge.postMessage<any>("elastos_getCredentials", query);
-    console.log("getCredentials Response received", response);
+    console.log("getCredentials response received", response);
     return VerifiablePresentation.parse(JSON.stringify(response));
+  }
+
+  public static async importCredentials(credentials: VerifiableCredential[], options?: DID.ImportCredentialOptions): Promise<DID.ImportedCredential[]> {
+    console.log("importCredentials request received", credentials, options);
+
+    let response = await essentialsBridge.postMessage<any>("elastos_importCredentials", {
+      credentials: credentials.map(c => c.toString()),
+      options
+    });
+    console.log("importCredentials response received", response);
+    return response;
   }
 
   public static async signData(data: string, jwtExtra?: any, signatureFieldName?: string): Promise<DID.SignedData> {
@@ -18,7 +28,7 @@ export class DIDOperations {
     let response = await essentialsBridge.postMessage<DID.SignedData>("elastos_signData", {
       data, jwtExtra, signatureFieldName
     });
-    console.log("signData Response received", response);
+    console.log("signData response received", response);
     return response;
   }
 }

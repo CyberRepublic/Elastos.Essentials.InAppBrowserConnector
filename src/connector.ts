@@ -20,7 +20,7 @@ class EssentialsDABConnector implements Interfaces.Connectors.IConnector {
   /**
    * DID API
    */
-  async getCredentials(query: GetCredentialsQuery): Promise<VerifiablePresentation> {
+  getCredentials(query: GetCredentialsQuery): Promise<VerifiablePresentation> {
     return DIDOperations.getCredentials(query);
   }
 
@@ -29,7 +29,7 @@ class EssentialsDABConnector implements Interfaces.Connectors.IConnector {
   }
 
   importCredentials(credentials: VerifiableCredential[], options?: DID.ImportCredentialOptions): Promise<DID.ImportedCredential[]> {
-    throw new Error("Method not implemented.");
+    return DIDOperations.importCredentials(credentials, options);
   }
 
   signData(data: string, jwtExtra?: any, signatureFieldName?: string): Promise<DID.SignedData> {
