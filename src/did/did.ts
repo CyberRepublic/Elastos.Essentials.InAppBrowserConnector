@@ -11,6 +11,14 @@ export class DIDOperations {
     return VerifiablePresentation.parse(JSON.stringify(response));
   }
 
+  public static async requestCredentials(query: DID.CredentialDisclosureRequest): Promise<VerifiablePresentation> {
+    console.log("requestCredentials request received", query);
+
+    let response = await essentialsBridge.postMessage<any>("elastos_requestCredentials", query);
+    console.log("requestCredentials response received", response);
+    return VerifiablePresentation.parse(JSON.stringify(response));
+  }
+
   public static async importCredentials(credentials: VerifiableCredential[], options?: DID.ImportCredentialOptions): Promise<DID.ImportedCredential[]> {
     console.log("importCredentials request received", credentials, options);
 
