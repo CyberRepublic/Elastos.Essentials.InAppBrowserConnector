@@ -31,7 +31,8 @@ export default {
 		resolve({
 			browser: true,
 			preferBuiltins: false,
-			dedupe: ['']
+			dedupe: [''],
+			exportConditions: ['browser'] // Make sure to search for "browser" in "exports" fields of dependencies package.json
 		}),
 		commonjs(),
 		typescript({

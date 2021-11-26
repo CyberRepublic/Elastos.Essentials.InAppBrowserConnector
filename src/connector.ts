@@ -1,5 +1,6 @@
 import { JSONObject, VerifiableCredential, VerifiablePresentation } from "@elastosfoundation/did-js-sdk";
 import { DID, Interfaces, Wallet } from "@elastosfoundation/elastos-connectivity-sdk-js";
+import { provider } from "web3-core";
 import { DIDOperations } from "./did/did";
 import { essentialsBridge } from "./essentialsbridge";
 
@@ -13,6 +14,12 @@ class EssentialsDABConnector implements Interfaces.Connectors.IConnector {
 
   async getDisplayName(): Promise<string> {
     return "Elastos Essentials In App Browser";
+  }
+
+  getWeb3Provider(): provider {
+    // As we are running inside essentials, the web3 provider is injeted
+    // into window.ethereum
+    return (window as any).ethereum as provider;
   }
 
   /**
