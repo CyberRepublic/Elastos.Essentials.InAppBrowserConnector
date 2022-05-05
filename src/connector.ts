@@ -34,7 +34,7 @@ class EssentialsDABConnector implements Interfaces.Connectors.IConnector {
   }
 
   issueCredential(holder: string, types: string[], subject: JSONObject, identifier?: string, expirationDate?: string): Promise<VerifiableCredential> {
-    throw new Error("Method not implemented.");
+    return DIDOperations.issueCredential(holder, types, subject, identifier, expirationDate);
   }
 
   importCredentials(credentials: VerifiableCredential[], options?: DID.ImportCredentialOptions): Promise<DID.ImportedCredential[]> {
@@ -46,15 +46,29 @@ class EssentialsDABConnector implements Interfaces.Connectors.IConnector {
   }
 
   deleteCredentials(credentialIds: string[], options?: DID.DeleteCredentialOptions): Promise<string[]> {
-    throw new Error("Method not implemented.");
+    return DIDOperations.deleteCredentials(credentialIds, options);
   }
 
   requestPublish(): Promise<string> {
+    // OK. Normally never used, could become deprecated soon, we don't implement for now.
     throw new Error("Method not implemented.");
   }
 
   generateAppIdCredential(appInstanceDID: string, appDID: string): Promise<any> {
-    throw new Error("Method not implemented.");
+    return DIDOperations.generateAppIdCredential(appInstanceDID, appDID);
+  }
+
+  updateHiveVaultAddress(vaultAddress: string, displayName: string): Promise<DID.UpdateHiveVaultAddressStatus> {
+    return DIDOperations.updateHiveVaultAddress(vaultAddress, displayName);
+  }
+
+  importCredentialContext(serviceName: string, contextCredential: VerifiableCredential): Promise<DID.ImportedCredential> {
+    // Ok for now, only used by the credential toolbox, not supposed to be used on mobile.
+    throw new Error("importCredentialContext(): Method not implemented.");
+  }
+
+  generateHiveBackupCredential(sourceHiveNodeDID: string, targetHiveNodeDID: string, targetNodeURL: string): Promise<VerifiableCredential> {
+    return DIDOperations.generateHiveBackupCredential(sourceHiveNodeDID, targetHiveNodeDID, targetNodeURL);
   }
 
   pay(query: any): Promise<Wallet.TransactionResult> {

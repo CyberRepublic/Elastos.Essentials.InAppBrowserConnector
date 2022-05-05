@@ -4,18 +4,18 @@
   "description": "",
   "main": "dist/essentialsiabconnector.js",
   "scripts": {
-    "build": "rollup --verbose -c rollup.config.js"
+    "build": "rollup -c rollup.config.js"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@elastosfoundation/did-js-sdk": "^2.2.0",
+    "@elastosfoundation/did-js-sdk": "^2.2.7",
     "@rollup/plugin-alias": "^3.1.5",
     "rollup-plugin-copy": "^3.4.0",
     "web3-core": "^1.6.1"
   },
   "devDependencies": {
-    "@elastosfoundation/elastos-connectivity-sdk-js": "^1.0.11",
+    "@elastosfoundation/elastos-connectivity-sdk-js": "^1.1.0-next",
     "@rollup/plugin-commonjs": "^17.1.0",
     "@rollup/plugin-node-resolve": "^11.2.0",
     "@rollup/plugin-typescript": "^8.2.1",
