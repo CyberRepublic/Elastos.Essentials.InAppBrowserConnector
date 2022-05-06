@@ -11,11 +11,14 @@ export default {
 	output: [
 		{
 			sourcemap: true,
-			format: 'iife',
-			file: 'dist/essentialsiabconnector.js'
+			format: 'umd', //'iife',
+			file: 'dist/essentialsiabconnector.js',
+			//inlineDynamicImports: true
 		},
 	],
 	external: [
+		"@elastosfoundation/elastos-connectivity-sdk-js",
+		"@elastosfoundation/did-js-sdk", // Can't be packaged, otherwise conflicts with DID SDKs used by running apps. "DID" classes are then different and fail to compare with "instanceof"
 		/* "@elastosfoundation/did-js-sdk",
 		"moment",
 		"rxjs" */

@@ -1,14 +1,27 @@
-import { DIDURL, JSONObject, VerifiableCredential, VerifiablePresentation } from "@elastosfoundation/did-js-sdk";
-import { connectivity, DID } from "@elastosfoundation/elastos-connectivity-sdk-js";
+import type { JSONObject, VerifiableCredential, VerifiablePresentation } from "@elastosfoundation/did-js-sdk";
+import type { DID } from "@elastosfoundation/elastos-connectivity-sdk-js";
+import { context } from "../context";
 import { essentialsBridge } from "../essentialsbridge";
 
+/**
+ * IMPORTANT NOTE: This internal essentials connector must NOT use the DID JS SDK and Connectivity SDK
+ * classes directly because otherwise this conflicst with those SDKs imported by the running apps. If
+ * multiple versions of those SDKs are in use in the same webview, webpack loader mixes SDK classes in a wrong
+ * way, and type checks such as "myVar instanceof DID" sometimes works, sometimes doesn't, because there are
+ * multiple versions of the "DID" class that are actually not "the same".
+ *
+ * So the trick to access DID SDK and Connectivity SDK methods here is to make the connectivity SDK provide
+ * references to those modules, loaded from the main app bundle, and use them in this connector without bundling
+ * anything.
+ */
 export class DIDOperations {
   public static async getCredentials(query: DID.GetCredentialsQuery): Promise<VerifiablePresentation> {
     console.log("getCredentials request received", query);
 
     let response = await essentialsBridge.postMessage<any>("elastos_getCredentials", query);
     console.log("getCredentials response received", response);
-    return VerifiablePresentation.parse(JSON.stringify(response));
+
+    return context.didSdk.VerifiablePresentation.parse(JSON.stringify(response));
   }
 
   public static async requestCredentials(request: DID.CredentialDisclosureRequest): Promise<VerifiablePresentation> {
@@ -21,7 +34,7 @@ export class DIDOperations {
       }
     );
     console.log("requestCredentials response received", response);
-    return VerifiablePresentation.parse(response.presentation);
+    return context.didSdk.VerifiablePresentation.parse(response.presentation);
   }
 
   public static async importCredentials(credentials: VerifiableCredential[], options?: DID.ImportCredentialOptions): Promise<DID.ImportedCredential[]> {
@@ -42,7 +55,7 @@ export class DIDOperations {
     let importedCredentials: DID.ImportedCredential[];
     importedCredentials = response.importedcredentials.map(credentialUrl => {
       return {
-        id: DIDURL.from(credentialUrl)
+        id: context.didSdk.DIDURL.from(credentialUrl)
       }
     });
 
@@ -95,7 +108,7 @@ export class DIDOperations {
       return null;
     }
 
-    return VerifiableCredential.parse(response.credential);
+    return context.didSdk.VerifiableCredential.parse(response.credential);
   }
 
   public static async updateHiveVaultAddress?(vaultAddress: string, displayName: string): Promise<DID.UpdateHiveVaultAddressStatus> {
@@ -136,7 +149,7 @@ export class DIDOperations {
       return null;
     }
 
-    return VerifiableCredential.parse(response.credential);
+    return context.didSdk.VerifiableCredential.parse(response.credential);
   }
 
   public static async generateHiveBackupCredential(sourceHiveNodeDID: string, targetHiveNodeDID: string, targetNodeURL: string): Promise<VerifiableCredential> {
@@ -156,14 +169,14 @@ export class DIDOperations {
       return null;
     }
 
-    return VerifiableCredential.parse(response.credential);
+    return context.didSdk.VerifiableCredential.parse(response.credential);
   }
 
   private static async postEssentialsUrlIntent<T>(url: string, params: any): Promise<T> {
     // Append informative caller information to the intent, if available.
     // getApplicationDID() throws an error if called when no app did has been set.
     try {
-      params["caller"] = connectivity.getApplicationDID();
+      params["caller"] = context.connectivity.getApplicationDID();
     }
     catch {
       // Silent catch, it's ok
