@@ -3,8 +3,9 @@ import type { JSONObject, VerifiableCredential, VerifiablePresentation } from "@
 import type { connectivity, DID, Wallet } from "@elastosfoundation/elastos-connectivity-sdk-js";
 import type { provider } from "web3-core";
 import { context } from "./context";
-import { DIDOperations } from "./did/did";
+import { DIDOperations } from "./did";
 import { essentialsBridge } from "./essentialsbridge";
+import { UXOperations } from "./ux";
 
 /**
  * Connector generated as a standalone JS file that can be injected into dApps opened from the
@@ -111,6 +112,13 @@ class EssentialsDABConnector /* implements Interfaces.Connectors.IConnector */ {
 
   sendSmartContractTransaction(payload: any): Promise<string> {
     throw new Error("Method not implemented.");
+  }
+
+  /**
+   * UI API
+   */
+  onBoard(feature: string, title: string, introduction: string, button: string): Promise<void> {
+    return UXOperations.onBoard(feature, title, introduction, button);
   }
 
   public sendResponse(id: number, result: any): void {

@@ -1,7 +1,7 @@
 import type { JSONObject, VerifiableCredential, VerifiablePresentation } from "@elastosfoundation/did-js-sdk";
 import type { DID } from "@elastosfoundation/elastos-connectivity-sdk-js";
-import { context } from "../context";
-import { essentialsBridge } from "../essentialsbridge";
+import { context } from "./context";
+import { essentialsBridge } from "./essentialsbridge";
 
 /**
  * IMPORTANT NOTE: This internal essentials connector must NOT use the DID JS SDK and Connectivity SDK
