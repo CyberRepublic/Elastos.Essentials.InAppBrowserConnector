@@ -41,12 +41,19 @@ export class DIDOperations {
         request
       }
     );
+
     console.log("requestCredentials response received", response);
+    if (!response || !response.presentation) {
+      console.warn("Missing presentation. The operation was maybe cancelled.", response);
+      return null;
+    }
+
     return context.didSdk.VerifiablePresentation.parse(response.presentation);
   }
 
   public static async requestCredentialsV2(requestId: string, request: DID.CredentialDisclosureRequest): Promise<void> {
     void this.processRequestCredentials(requestId, request);
+    return await null;
   }
 
   static async processRequestCredentials(requestId: string, request: DID.CredentialDisclosureRequest) {
@@ -85,6 +92,13 @@ export class DIDOperations {
       query
     );
 
+    console.log("importCredentials response received", response);
+
+    if (!response || !response.importedcredentials || !(response.importedcredentials instanceof Array)) {
+      console.warn("Missing result data. The operation was maybe cancelled.", response);
+      return null;
+  }
+
     let importedCredentials: DID.ImportedCredential[];
     importedCredentials = response.importedcredentials.map(credentialUrl => {
       return {
@@ -92,12 +106,12 @@ export class DIDOperations {
       }
     });
 
-    console.log("importCredentials response received", response);
     return importedCredentials;
   }
 
   static async importCredentialsV2(requestId: string, credentials: VerifiableCredential[], options?: DID.ImportCredentialOptions): Promise<void> {
     void this.processImportCredentials(requestId, credentials);
+    return await null;
   }
 
   static async processImportCredentials(requestId: string, credentials: VerifiableCredential[], options?: DID.ImportCredentialOptions) {
