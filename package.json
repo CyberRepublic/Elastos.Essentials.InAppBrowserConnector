@@ -9,13 +9,13 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@elastosfoundation/did-js-sdk": "^2.2.7",
+    "@elastosfoundation/did-js-sdk": "^2.3.4",
     "@rollup/plugin-alias": "^3.1.5",
     "rollup-plugin-copy": "^3.4.0",
     "web3-core": "^1.6.1"
   },
   "devDependencies": {
-    "@elastosfoundation/elastos-connectivity-sdk-js": "^1.1.0-next",
+    "@elastosfoundation/elastos-connectivity-sdk-js": "^2.0.7-next",
     "@rollup/plugin-commonjs": "^17.1.0",
     "@rollup/plugin-node-resolve": "^11.2.0",
     "@rollup/plugin-typescript": "^8.2.1",

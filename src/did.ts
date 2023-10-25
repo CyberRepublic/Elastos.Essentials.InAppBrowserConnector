@@ -1,7 +1,10 @@
 import type { JSONObject, VerifiableCredential, VerifiablePresentation } from "@elastosfoundation/did-js-sdk";
-import type { DID } from "@elastosfoundation/elastos-connectivity-sdk-js";
+import { DID } from "@elastosfoundation/elastos-connectivity-sdk-js";
 import { context } from "./context";
 import { essentialsBridge } from "./essentialsbridge";
+import { IntentEntity } from "./intent/intent";
+import { IntentType } from "./intent/intent-type";
+import { processIntentResponse, registerIntentResponseProcessor } from "./response-processor";
 
 /**
  * IMPORTANT NOTE: This internal essentials connector must NOT use the DID JS SDK and Connectivity SDK
@@ -15,6 +18,11 @@ import { essentialsBridge } from "./essentialsbridge";
  * anything.
  */
 export class DIDOperations {
+  static registerResponseProcessors() {
+    registerIntentResponseProcessor(IntentType.REQUEST_CREDENTIALS, DIDOperations.processRequestCredentialsResponse);
+    registerIntentResponseProcessor(IntentType.IMPORT_CREDENTIALS, DIDOperations.processImportCredentialsResponse);
+  }
+
   public static async getCredentials(query: DID.GetCredentialsQuery): Promise<VerifiablePresentation> {
     console.log("getCredentials request received", query);
 
@@ -35,6 +43,31 @@ export class DIDOperations {
     );
     console.log("requestCredentials response received", response);
     return context.didSdk.VerifiablePresentation.parse(response.presentation);
+  }
+
+  public static async requestCredentialsV2(requestId: string, request: DID.CredentialDisclosureRequest): Promise<void> {
+    void this.processRequestCredentials(requestId, request);
+  }
+
+  static async processRequestCredentials(requestId: string, request: DID.CredentialDisclosureRequest) {
+    let vp = await this.requestCredentials(request);
+
+    const intentEntity: IntentEntity = {
+      id: requestId,
+      type : IntentType.REQUEST_CREDENTIALS,
+      requestPayload: {
+        caller: this.getApplicationDID(),
+        requestId: requestId
+      },
+      responsePayload: vp
+    }
+
+    processIntentResponse(intentEntity);
+  }
+
+  static async processRequestCredentialsResponse(intent: IntentEntity): Promise<VerifiablePresentation> {
+    // Do nothing
+    return intent.responsePayload
   }
 
   public static async importCredentials(credentials: VerifiableCredential[], options?: DID.ImportCredentialOptions): Promise<DID.ImportedCredential[]> {
@@ -61,6 +94,31 @@ export class DIDOperations {
 
     console.log("importCredentials response received", response);
     return importedCredentials;
+  }
+
+  static async importCredentialsV2(requestId: string, credentials: VerifiableCredential[], options?: DID.ImportCredentialOptions): Promise<void> {
+    void this.processImportCredentials(requestId, credentials);
+  }
+
+  static async processImportCredentials(requestId: string, credentials: VerifiableCredential[], options?: DID.ImportCredentialOptions) {
+    let importedCredentials = await this.importCredentials(credentials);
+
+    const intentEntity: IntentEntity = {
+      id: requestId,
+      type : IntentType.IMPORT_CREDENTIALS,
+      requestPayload: {
+        caller: this.getApplicationDID(),
+        requestId: requestId
+      },
+      responsePayload: importedCredentials
+    }
+
+    processIntentResponse(intentEntity);
+  }
+
+  static async processImportCredentialsResponse(intent: IntentEntity): Promise<DID.ImportedCredential[]> {
+    // Do nothing
+    return intent.responsePayload;
   }
 
   public static async signData(data: string, jwtExtra?: any, signatureFieldName?: string): Promise<DID.SignedData> {
@@ -174,17 +232,24 @@ export class DIDOperations {
 
   private static async postEssentialsUrlIntent<T>(url: string, params: any): Promise<T> {
     // Append informative caller information to the intent, if available.
-    // getApplicationDID() throws an error if called when no app did has been set.
-    try {
-      params["caller"] = context.connectivity.getApplicationDID();
-    }
-    catch {
-      // Silent catch, it's ok
+    let caller = this.getApplicationDID();
+    if (caller) {
+      params["caller"] = caller;
     }
 
     return essentialsBridge.postMessage<T>("elastos_essentials_url_intent", {
       url,
       params
     });
+  }
+
+  private static getApplicationDID() {
+    // getApplicationDID() throws an error if called when no app did has been set.
+    try {
+      return context.connectivity.getApplicationDID();
+    }
+    catch {
+      // Silent catch, it's ok
+    }
   }
 }
